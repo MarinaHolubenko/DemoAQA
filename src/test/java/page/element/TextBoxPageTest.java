@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 
 public class TextBoxPageTest {
-    private TextBoxPage TextBoxPage;
+    private TextBoxPage textBoxPage;
     private WebDriver driver;
 
     @BeforeMethod
@@ -18,7 +18,7 @@ public class TextBoxPageTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://demoqa.com/text-box");
-        TextBoxPage = new TextBoxPage(driver);
+        textBoxPage = new TextBoxPage(driver);
     }
 
     @Test
@@ -26,9 +26,9 @@ public class TextBoxPageTest {
         String nameInput = "Marina";
         String expectedResult = "Marina";
 
-        TextBoxPage.fillFullName(nameInput);
-        TextBoxPage.clickSubmitButton();
-        String actualResult = TextBoxPage.getOutputText();
+        textBoxPage.fillFullName(nameInput);
+        textBoxPage.clickSubmitButton();
+        String actualResult = textBoxPage.getOutputText();
 
         Assert.assertTrue(actualResult.contains(expectedResult));
     }
@@ -37,7 +37,7 @@ public class TextBoxPageTest {
 
     @AfterMethod
     public void Clear(){
-        TextBoxPage = null;
+        textBoxPage = null;
         driver.quit();
     }
 
