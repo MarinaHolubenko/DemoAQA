@@ -82,8 +82,8 @@ public class TextBoxPage {
 
     // Перебираєм виведені в output значення і виводим в рядок
     public String getOutputText(){
-        WebDriverWait waitOutput = new WebDriverWait(driver, Duration.ofSeconds(10));
-        waitOutput.until(ExpectedConditions.visibilityOf(output));
+//        WebDriverWait waitOutput = new WebDriverWait(driver, Duration.ofSeconds(10));
+//        waitOutput.until(ExpectedConditions.visibilityOf(output));
 
 
         List<WebElement> elements = output.findElements(By.xpath("//*[@class=\"mb-1\"]"));
