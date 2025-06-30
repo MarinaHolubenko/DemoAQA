@@ -28,9 +28,21 @@ public class TextBoxPageTest {
 
         textBoxPage.fillFullName(nameInput);
         textBoxPage.clickSubmitButton();
-        String actualResult = textBoxPage.getOutputText();
+        String actualResult = textBoxPage.verifyOutputText(expectedResult);
 
         Assert.assertTrue(actualResult.contains(expectedResult));
+    }
+
+    @Test
+    public void fillEmail(){
+        String emailInput = "dkfkds@dksjfk.com";
+        String expectedResultEmail = "dkfkds@dksjfk.com";
+
+        textBoxPage.fillEmail(emailInput);
+        textBoxPage.clickSubmitButton();
+        String actualResult = textBoxPage.verifyOutputText(expectedResultEmail);
+
+        Assert.assertTrue(actualResult.contains(expectedResultEmail));
     }
 
 

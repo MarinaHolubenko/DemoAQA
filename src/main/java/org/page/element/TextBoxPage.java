@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class TextBoxPage {
     public WebDriver driver;
@@ -35,6 +36,9 @@ public class TextBoxPage {
     @FindBy(xpath = "//*[@id=\"output\"]")
     private WebElement output;
 
+    private FluentWait <WebDriver> wait;
+
+
     public TextBoxPage (WebDriver driverParameter){
         PageFactory.initElements(driverParameter, this);
         this.driver = driverParameter;
@@ -44,57 +48,69 @@ public class TextBoxPage {
 //        this.permanentAddressTextArea = driver.findElement(By.xpath(Path.TEXT_BOX_PERMANENT_ADDRESS));
 //        this.submitButton = driver.findElement(By.xpath(Path.TEXT_BOX_SUBMIT_BUTTON));
 //        this.output = driver.findElement(By.xpath(Path.TEXT_BOX_OUTPUT));
+
+        this.wait = new FluentWait<>(driverParameter)
+                .withTimeout(Duration.ofSeconds(10))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(NoSuchElementException.class);
     }
 
     public void fillFullName (String value){
+        wait.until(ExpectedConditions.visibilityOf(fullNameInput));
         fullNameInput.clear();
         fullNameInput.sendKeys(value);
+        wait.until(ExpectedConditions.textToBePresentInElementValue(fullNameInput, value));
     }
 
     public void fillEmail (String email){
+        wait.until(ExpectedConditions.visibilityOf(emailInput));
         emailInput.clear();
         emailInput.sendKeys(email);
+        wait.until(ExpectedConditions.textToBePresentInElementValue(emailInput, email));
     }
 
     public void fillCurrentAddress (String currentAddressText){
+        wait.until(ExpectedConditions.visibilityOf(currentAddressTextArea));
         currentAddressTextArea.clear();
         currentAddressTextArea.sendKeys(currentAddressText);
+        wait.until(ExpectedConditions.textToBePresentInElementValue(currentAddressTextArea, currentAddressText));
     }
 
     public void fillPermanentAddress (String permanentAddressText){
+        wait.until(ExpectedConditions.visibilityOf(permanentAddressTextArea));
         permanentAddressTextArea.clear();
         permanentAddressTextArea.sendKeys(permanentAddressText);
+        wait.until(ExpectedConditions.textToBePresentInElementValue(permanentAddressTextArea, permanentAddressText));
     }
 
     public void clickSubmitButton (){
-
-        FluentWait<WebElement> wait = new FluentWait<>(submitButton);
-        wait.withTimeout(Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofSeconds(5))
-                .ignoring(ElementClickInterceptedException.class);
+        wait.until(ExpectedConditions.elementToBeClickable(submitButton));
 
         Actions actions = new Actions(driver);
-        actions.scrollByAmount(0,10);
-        actions.perform();
-        actions.click(submitButton);
-        actions.perform();
+        actions.scrollByAmount(0, 200);
+        wait.until(ExpectedConditions.visibilityOf(submitButton));
+        actions.click(submitButton).perform();
     }
 
     // Перебираєм виведені в output значення і виводим в рядок
-    public String getOutputText(){
-//        WebDriverWait waitOutput = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        waitOutput.until(ExpectedConditions.visibilityOf(output));
+//    public String getOutputText(){
+//      wait.until(ExpectedConditions.visibilityOf(output));
+//
+//
+//        List<WebElement> elements = output.findElements(By.xpath("//*[@class=\"mb-1\"]"));
+//        StringBuilder stringBuilder = new StringBuilder();
+//
+//        for (WebElement element : elements){
+//            stringBuilder.append(element);
+//            stringBuilder.append("\n");
+//        }
+//        return stringBuilder.toString();
+//    }
 
-
-        List<WebElement> elements = output.findElements(By.xpath("//*[@class=\"mb-1\"]"));
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (WebElement element : elements){
-            stringBuilder.append(element);
-            stringBuilder.append("\n");
-        }
-        return stringBuilder.toString();
+    public String verifyOutputText (String result){
+        wait.until(ExpectedConditions.visibilityOf(output));
+        String actualOutput = output.getText();
+        return actualOutput;
     }
-
 
 }
